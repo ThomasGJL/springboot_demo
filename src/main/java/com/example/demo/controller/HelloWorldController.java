@@ -1,5 +1,7 @@
 package com.example.demo.controller;
 
+import com.example.demo.rabbitmq.Producer;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -12,14 +14,22 @@ import io.swagger.annotations.ApiParam;
 @Api(value = "desc of class")
 @RestController
 public class HelloWorldController {
-	
-	
-	@Value("${content}")
-    private String content; 
+
+    @Autowired
+    private Producer producer;
+
+    //@Value("${content}")
+    //private String content;
 	
 	@ApiOperation(value = "desc of method", notes = "")
     @RequestMapping("/hello")
-    public String index(@ApiParam(value = "desc of param" , required=true ) @RequestParam String name) {
-		return "Hello " + name + "!";
+    public String index() {
+		return "Hello !";
+    }
+
+    @RequestMapping("/send")
+    public String sendMQ() {
+	    producer.send();
+        return "success";
     }
 }
